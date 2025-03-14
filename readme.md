@@ -1,9 +1,3 @@
-Entendido! Vamos manter o conteúdo do `README` original, mas vamos adicionar separadores visuais (como os das imagens) e formatar o texto como HTML para um visual mais limpo e organizado. Além disso, adicionaremos um logo centralizado no início.
-
-Aqui está o `README.md` reformulado:
-
----
-
 <p align="center">
   <img src="logo_guidom.png" alt="Guidom Logo" width="200"/>
 </p>
