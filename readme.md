@@ -124,13 +124,3 @@ Se tiver dúvidas, sugestões ou quiser entrar em contato, sinta-se à vontade p
     <img src="https://skillicons.dev/icons?i=gmail" alt="Gmail"/>
   </a>
 </p>
-
----
-
-### Observações Finais
-
-- Substitua `logo_guidom.png` pelo caminho do seu próprio logo.
-- Atualize os links de redes sociais e e-mail pelos seus próprios.
-- O layout é altamente personalizável, então ajuste conforme necessário.
-
-Se precisar de mais ajustes ou tiver dúvidas, é só perguntar! 😊
