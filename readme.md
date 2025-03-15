@@ -1,136 +1,174 @@
-Entendido! Vamos manter o conteúdo do `README` original, mas vamos adicionar separadores visuais (como os das imagens) e formatar o texto como HTML para um visual mais limpo e organizado. Além disso, adicionaremos um logo centralizado no início.
+# Calota Organizer - Versão 1.2
 
-Aqui está o `README.md` reformulado:
+O **Calota Organizer** é um script Python projetado para organizar informações sobre rodas e calotas a partir de uma planilha Excel ou CSV. Ele cria pastas individuais para cada item da planilha, gera arquivos de descrição detalhados (`descricao.txt`) e um arquivo consolidado de aprovação (`aprovacao.txt`).
 
 ---
 
-<p align="center">
-  <img src="logo_guidom.png" alt="Guidom Logo" width="200"/>
-</p>
+## Funcionalidades Principais
 
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
+1. **Leitura de Planilha**:
+   - O script lê os dados de uma planilha (`.csv` ou `.xlsx`) contendo informações sobre rodas e calotas.
+   - As colunas da planilha incluem: `DATA`, `FABRICANTE | MODELO`, `ANO`, `QTD`, `ACABAMENTO`, `NÚMERO DE PEÇA / SKU`, `CONCORRÊNCIA`, `OLX | FACE`, `TOTAL`, `POSTADO`, e `VISITAS`.
 
-### 📌 **Descrição**
+2. **Criação de Pastas e Arquivos**:
+   - Para cada linha da planilha, o script cria uma pasta nomeada com base no fabricante e modelo.
+   - Cada pasta contém um arquivo `descricao.txt` com informações detalhadas sobre a roda/calota.
 
-O script foi criado para automatizar a organização de pastas relacionadas a calotas/rodas automotivas. Ele foi desenvolvido para facilitar a criação de diretórios com nomes padronizados, baseados em uma lista predefinida de modelos de veículos.
+3. **Arquivo Consolidado de Aprovação**:
+   - Um arquivo `aprovacao.txt` é gerado no diretório raiz, listando todas as rodas/calotas organizadas pelo script.
 
-Com este script, você pode criar pastas numeradas e formatadas automaticamente, garantindo uma estrutura organizada e fácil de navegar.
+4. **Tratamento de Nomes de Colunas**:
+   - O script remove automaticamente espaços extras nos nomes das colunas da planilha para evitar erros.
 
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
+5. **Codificação UTF-8**:
+   - Todos os arquivos gerados são salvos com codificação UTF-8 para garantir compatibilidade com caracteres especiais.
 
-### 🔧 **Problema Resolvido**
+---
 
-A principal necessidade atendida é a organização sistemática de dados relacionados a calotas automotivas. Ao trabalhar com uma grande quantidade de modelos de veículos, manter uma estrutura de pastas consistente pode ser desafiador. Este script resolve esse problema ao:
+## Alterações na Versão 1.2
 
-- Criar pastas numeradas sequencialmente (`01_nome`, `02_nome`, etc.).
-- Substituir espaços por underscores (`_`) para nomes válidos no sistema de arquivos.
-- Remover caracteres inválidos que podem causar erros no Windows.
-- Garantir que cada pasta tenha um nome único, mesmo que haja duplicatas na lista original.
+### Correções e Melhorias
+1. **Remoção de Espaços Extras nos Nomes de Colunas**:
+   - Ajuste no código para remover automaticamente espaços extras nos nomes das colunas da planilha. Isso resolve problemas como a coluna `QTD` estar escrita como `"QTD "` (com espaço no final).
 
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
+2. **Correção de Erros Relacionados às Colunas**:
+   - Adicionado uma verificação para garantir que todas as colunas necessárias existam na planilha. Caso falte alguma coluna, o script exibirá uma mensagem de erro clara.
 
-### 🚀 **Funcionalidades**
+3. **Template de Aprovação Exato**:
+   - O template de aprovação foi ajustado para seguir **exatamente** o formato fornecido pelo usuário, sem alterações ou adaptações.
 
-- **Criação Automática de Pastas**: Gera diretórios com nomes padronizados com base em uma lista fornecida.
-- **Contador Sequencial**: Adiciona um número de ordem (`01_`, `02_`, etc.) antes de cada nome.
-- **Formatação de Nomes**: Substitui espaços por underscores (`_`) e remove caracteres inválidos.
-- **Diretório Raiz Configurável**: Permite definir o caminho onde as pastas serão criadas.
-- **Verificação de Existência**: Evita a criação de pastas duplicadas.
+4. **Manutenção do Campo "Ano"**:
+   - O campo `ANO` continua sendo usado no arquivo `descricao.txt`, mas foi removido do arquivo `aprovacao.txt`, conforme solicitado.
 
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
+5. **Compatibilidade com Diferentes Formatos de Planilha**:
+   - O script agora suporta tanto arquivos `.csv` quanto `.xlsx`, garantindo maior flexibilidade.
 
-### 🛠️ **Requisitos**
+6. **Melhoria na Mensagem de Erro**:
+   - Mensagens de erro foram refinadas para facilitar a identificação de problemas, como colunas ausentes ou caminhos incorretos.
 
-Para usar o **Calota Organizer**, você precisa ter os seguintes requisitos instalados:
+---
 
-- **Python 3.x**: O script foi desenvolvido para funcionar com Python 3. Certifique-se de que o Python está instalado no seu sistema.
-- **Bibliotecas Necessárias**: Este script usa `pandas` para ler planilhas. Instale-o com:
-  ```bash
-  pip install pandas openpyxl
-  ```
+## Como Usar o Script
 
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
+### Pré-requisitos
+1. **Python 3.x** instalado no sistema.
+2. Bibliotecas Python necessárias:
+   - `pandas`
+   - `os`
 
-### 📝 **Como Usar**
+Instale as dependências com o seguinte comando:
+```bash
+pip install pandas
+```
 
-1. **Clone ou Baixe o Projeto**:
-   - Clone este repositório usando o comando:
-     ```bash
-     git clone https://github.com/seu-usuario/guidon_wheels.git
+### Passos para Executar
+1. **Baixe ou Clone o Script**:
+   - Salve o arquivo `calota_organizer.py` em seu computador.
+
+2. **Prepare a Planilha**:
+   - Certifique-se de que sua planilha contenha as seguintes colunas:
      ```
-   - Ou baixe o código-fonte diretamente como um arquivo ZIP.
+     DATA, FABRICANTE | MODELO, ANO, QTD, ACABAMENTO, NÚMERO DE PEÇA / SKU, CONCORRÊNCIA, OLX | FACE, TOTAL, POSTADO, VISITAS
+     ```
 
-2. **Prepare Sua Planilha**:
-   - Crie uma planilha no formato `.csv` ou `.xlsx` com uma coluna chamada `"Nomes"` contendo os nomes dos modelos de veículos.
-
-3. **Configurar o Script**:
-   - Abra o arquivo `script.py` e altere as variáveis `planilha_path` e `pasta_raiz` para os caminhos corretos. Por exemplo:
+3. **Configure o Script**:
+   - Abra o arquivo `calota_organizer.py` e ajuste os seguintes parâmetros:
      ```python
-     planilha_path = r"C:\caminho\para\sua_planilha.csv"
-     pasta_raiz = r"C:\Users\Guido\Desktop\calotas\12_mar_25"
+     planilha_path = r"C:\caminho\para\sua_planilha.xlsx"  # Caminho para a planilha
+     pasta_raiz = r"C:\caminho\para\diretorio_raiz"        # Diretório onde as pastas serão criadas
      ```
 
-4. **Executar o Script**:
-   - No terminal, navegue até o diretório do projeto e execute o script:
+4. **Execute o Script**:
+   - Execute o script no terminal:
      ```bash
-     python script.py
+     python calota_organizer.py
      ```
 
-5. **Resultado**:
-   - As pastas serão criadas no caminho especificado, com nomes no formato `01_Nissan_Kicks_16`, `02_Nissan_March_14`, etc.
-
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
-
-### 📂 **Exemplo de Estrutura de Pastas**
-
-Após a execução do script, a estrutura de pastas será semelhante a esta:
-
-```
-C:\Users\Guido\Desktop\calotas\12_mar_25\
-    ├── 01_Nissan_Kicks_16
-    ├── 02_Nissan_March_14
-    ├── 03_Nissan_Tiida_Versa_15
-    ├── 04_Toyota_Corolla_16
-    ├── 05_Hyundai_HB20_14
-    └── ...
-```
-
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
-
-### 🤝 **Contribuições**
-
-Este é um projeto em desenvolvimento, e contribuições são bem-vindas! Se você deseja melhorar o script ou adicionar novas funcionalidades, fique à vontade para abrir uma issue ou enviar um pull request.
-
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
-
-### 📄 **Licença**
-
-Este projeto está licenciado sob a [MIT License](LICENSE). Você pode usá-lo, modificá-lo e distribuí-lo conforme necessário.
-
-<img src="https://i.imgur.com/waxVImv.png" width="100%"/>
-
-### 🌐 **Contato**
-
-Se tiver dúvidas, sugestões ou quiser entrar em contato, sinta-se à vontade para me procurar:
-
-<p align="center">
-  <a href="https://linkedin.com/in/seu-perfil">
-    <img src="https://skillicons.dev/icons?i=linkedin" alt="LinkedIn"/>
-  </a>
-  <a href="https://github.com/seu-usuario">
-    <img src="https://skillicons.dev/icons?i=github" alt="GitHub"/>
-  </a>
-  <a href="mailto:seu-email@example.com">
-    <img src="https://skillicons.dev/icons?i=gmail" alt="Gmail"/>
-  </a>
-</p>
+5. **Verifique os Resultados**:
+   - Após a execução, confira o diretório raiz para encontrar as pastas e arquivos gerados.
 
 ---
 
-### Observações Finais
+## Estrutura de Saída
 
-- Substitua `logo_guidom.png` pelo caminho do seu próprio logo.
-- Atualize os links de redes sociais e e-mail pelos seus próprios.
-- O layout é altamente personalizável, então ajuste conforme necessário.
+### Pastas Individuais
+Cada pasta será nomeada no formato:
+```
+01_Nome_da_Roda
+```
+Dentro de cada pasta, haverá um arquivo `descricao.txt` com informações detalhadas.
 
-Se precisar de mais ajustes ou tiver dúvidas, é só perguntar! 😊
+#### Exemplo de `descricao.txt`
+```
+Descrição da Calota: GM Corsa 14''
+Data: 2023-03-15
+Ano: 2020
+Quantidade: 10
+Acabamento: Cromado
+SKU: SKU123
+Concorrência: Modelo X
+Preço OLX / Facebook: R$ 100
+Total: R$ 1000
+Postado: Sim
+Visitas: 500
+
+Esta é uma descrição gerada automaticamente pelo script Calota Organizer.
+```
+
+### Arquivo Consolidado de Aprovação
+No diretório raiz, será gerado um arquivo `aprovacao.txt` com o seguinte formato:
+
+#### Exemplo de `aprovacao.txt`
+```
+Arquivo de Aprovação de Rodas
+============================
+
+Abaixo estão listadas todas as calotas organizadas pelo script Calota Organizer:
+
+------------------------
+
+*GM Corsa 14''*
+
+Data: 2023-03-15
+Quantidade: 10
+Acabamento: Cromado
+SKU: SKU123
+*Concorrência: Modelo X
+Preço OLX / Facebook: R$ 100
+---------------
+
+------------------------
+
+*Honda City 15''*
+
+Data: 2023-03-16
+Quantidade: 5
+Acabamento: Polido
+SKU: SKU456
+*Concorrência: Modelo Y
+Preço OLX / Facebook: R$ 150
+
+---------------
+...
+```
+
+---
+
+## Observações Importantes
+
+1. **Formato da Planilha**:
+   - Certifique-se de que os nomes das colunas na planilha correspondam exatamente aos esperados pelo script (após a remoção de espaços extras).
+
+2. **Codificação da Planilha**:
+   - Se sua planilha estiver em um formato diferente de UTF-8, pode ser necessário convertê-la antes de usar o script.
+
+3. **Erros Comuns**:
+   - **Erro ao encontrar colunas**: Verifique se os nomes das colunas na planilha correspondem aos esperados.
+   - **Erro ao criar pastas**: Certifique-se de que o caminho para o diretório raiz esteja correto e que você tenha permissão para criar pastas nesse local.
+
+---
+
+## Suporte
+
+Se precisar de ajuda ou quiser sugerir melhorias, entre em contato com o desenvolvedor ou abra uma issue no repositório do projeto.
+
