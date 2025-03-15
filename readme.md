@@ -5,6 +5,11 @@ O **Calota Organizer** é um script Python projetado para organizar informaçõe
 ---
 
 ## Funcionalidades Principais
+=======
+<p align="center">
+  <img src="logo_guidom.png" alt="Guidom Logo" width="200"/>
+</p>
+>>>>>>> 18b2388b498185f98151a6e25c8050c48648d4f6
 
 1. **Leitura de Planilha**:
    - O script lê os dados de uma planilha (`.csv` ou `.xlsx`) contendo informações sobre rodas e calotas.
@@ -82,93 +87,3 @@ pip install pandas
    - Execute o script no terminal:
      ```bash
      python calota_organizer.py
-     ```
-
-5. **Verifique os Resultados**:
-   - Após a execução, confira o diretório raiz para encontrar as pastas e arquivos gerados.
-
----
-
-## Estrutura de Saída
-
-### Pastas Individuais
-Cada pasta será nomeada no formato:
-```
-01_Nome_da_Roda
-```
-Dentro de cada pasta, haverá um arquivo `descricao.txt` com informações detalhadas.
-
-#### Exemplo de `descricao.txt`
-```
-Descrição da Calota: GM Corsa 14''
-Data: 2023-03-15
-Ano: 2020
-Quantidade: 10
-Acabamento: Cromado
-SKU: SKU123
-Concorrência: Modelo X
-Preço OLX / Facebook: R$ 100
-Total: R$ 1000
-Postado: Sim
-Visitas: 500
-
-Esta é uma descrição gerada automaticamente pelo script Calota Organizer.
-```
-
-### Arquivo Consolidado de Aprovação
-No diretório raiz, será gerado um arquivo `aprovacao.txt` com o seguinte formato:
-
-#### Exemplo de `aprovacao.txt`
-```
-Arquivo de Aprovação de Rodas
-============================
-
-Abaixo estão listadas todas as calotas organizadas pelo script Calota Organizer:
-
-------------------------
-
-*GM Corsa 14''*
-
-Data: 2023-03-15
-Quantidade: 10
-Acabamento: Cromado
-SKU: SKU123
-*Concorrência: Modelo X
-Preço OLX / Facebook: R$ 100
----------------
-
-------------------------
-
-*Honda City 15''*
-
-Data: 2023-03-16
-Quantidade: 5
-Acabamento: Polido
-SKU: SKU456
-*Concorrência: Modelo Y
-Preço OLX / Facebook: R$ 150
-
----------------
-...
-```
-
----
-
-## Observações Importantes
-
-1. **Formato da Planilha**:
-   - Certifique-se de que os nomes das colunas na planilha correspondam exatamente aos esperados pelo script (após a remoção de espaços extras).
-
-2. **Codificação da Planilha**:
-   - Se sua planilha estiver em um formato diferente de UTF-8, pode ser necessário convertê-la antes de usar o script.
-
-3. **Erros Comuns**:
-   - **Erro ao encontrar colunas**: Verifique se os nomes das colunas na planilha correspondem aos esperados.
-   - **Erro ao criar pastas**: Certifique-se de que o caminho para o diretório raiz esteja correto e que você tenha permissão para criar pastas nesse local.
-
----
-
-## Suporte
-
-Se precisar de ajuda ou quiser sugerir melhorias, entre em contato com o desenvolvedor ou abra uma issue no repositório do projeto.
-
