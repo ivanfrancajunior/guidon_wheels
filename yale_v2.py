@@ -2,36 +2,23 @@ import os
 import pandas as pd
 
 # Caminho para a planilha
-planilha_path = r"C:\Users\Guido\Downloads\planilha guidon_ roda_de_ferro_e_calota.xlsx"  # Altere para o caminho da sua planilha
+planilha_path = r"C:\Users\Junior\Downloads\planilha_guidon_ roda_de_ferro_e_calota.xlsx"  # Altere para o caminho da sua planilha
 
 # Caminho padrão para a criação das pastas
-pasta_raiz = r"C:\Users\Guido\Desktop\calotas\teste_mar_25"
+pasta_raiz = r"C:\Users\Junior\Desktop\calotas\teste_mar_25"
 
-# Texto base para a descrição (será personalizado posteriormente)
-descricao_base = """Descrição da Calota: {Fabricante_Modelo}
-Data: {DATA}
-Ano: {ANO}
-Quantidade: {QTD}
-Acabamento: {ACABAMENTO}
-SKU: {SKU}
-Concorrência: {CONCORRÊNCIA}
-Preço OLX / Facebook: {OLX_FACE}
-Total: {TOTAL}
-Postado: {POSTADO}
-Visitas: {VISITAS}
+# Caminhos para os arquivos de texto base
+caminho_descricao_base = r"descricao_base.txt"
+caminho_cabecalho_aprovacao = r"cabecalho_aprovacao.txt"
 
-Esta é uma descrição gerada automaticamente pelo script Calota Organizer.
-"""
+# Ler os textos base dos arquivos
+with open(caminho_descricao_base, "r", encoding="utf-8") as arquivo:
+    descricao_base = arquivo.read()
 
-# Texto base para o arquivo de aprovação (EXATAMENTE como você forneceu)
-cabecalho_aprovacao = """Arquivo de Aprovação de Rodas
-============================
+with open(caminho_cabecalho_aprovacao, "r", encoding="utf-8") as arquivo:
+    cabecalho_aprovacao = arquivo.read()
 
-Abaixo estão listadas todas as calotas organizadas pelo script Calota Organizer:
-
-"""
-
-# Texto base para cada entrada na aprovação (EXATAMENTE como você forneceu)
+# Texto base para cada entrada na aprovação
 template_aprovacao = """------------------------
 
 *{Fabricante_Modelo}*
@@ -54,9 +41,9 @@ def criar_pastas(planilha_path, pasta_raiz):
 
         # Ler a planilha com base na extensão
         if planilha_path.endswith('.csv'):
-            df = pd.read_csv(planilha_path)  # Para arquivos CSV
+            df = pd.read_csv(planilha_path)
         elif planilha_path.endswith('.xlsx'):
-            df = pd.read_excel(planilha_path)  # Para arquivos Excel (.xlsx)
+            df = pd.read_excel(planilha_path)
         else:
             raise ValueError("Formato de arquivo não suportado. Use .csv ou .xlsx.")
 
@@ -65,8 +52,8 @@ def criar_pastas(planilha_path, pasta_raiz):
 
         # Verificar se as colunas necessárias existem
         colunas_necessarias = [
-            "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO","MATERIAL",
-            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "COTAÇÃO","OLX | FACE","ML", "TOTAL", "POSTADO", "VISITAS",'USADO'
+            "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO", "MATERIAL",
+            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE", "ML", "TOTAL", "POSTADO", "VISITAS", 'USADO'
         ]
         for coluna in colunas_necessarias:
             if coluna not in df.columns:
@@ -90,14 +77,35 @@ def criar_pastas(planilha_path, pasta_raiz):
             acabamento = row["ACABAMENTO"]
             material = row["MATERIAL"]
             sku = row["NÚMERO DE PEÇA / SKU"]
-            cotação = row["COTAÇÃO"]
             concorrencia = row["CONCORRÊNCIA"]
             olx_face = row["OLX | FACE"]
             ml = row["ML"]
             total = row["TOTAL"]
             postado = row["POSTADO"]
-            visitas = row["VISITAS"]
-            usado = row["USADO"]
+            visitas = row["USADO"]
+
+            # Remover o prefixo "Calota Aro ..." se existir
+            if fabricante_modelo.startswith("Calota Aro"):
+                fabricante_modelo = fabricante_modelo.replace("Calota Aro ", "", 1)
+
+            # Separar marca e modelo
+            partes = fabricante_modelo.split(" ", 1)
+            if len(partes) == 2:
+                marca, modelo = partes
+            else:
+                marca, modelo = "Desconhecido", fabricante_modelo
+
+            # Extrair o diâmetro (aro)
+            if modelo and modelo[0].isdigit():
+                aro = modelo[:2]  # Assume que o diâmetro está nos primeiros 2 caracteres
+                modelo = modelo[2:].strip()  # Remove o diâmetro do modelo
+            else:
+                aro = "Desconhecido"
+
+            # Corrigir o modelo (remover palavras indesejadas como "Grid")
+            modelo = modelo.replace("Grid", "").strip()
+
+            cor = acabamento  # Assume que "Acabamento" é a cor
 
             # Remover caracteres inválidos e substituir espaços por underscores
             nome_formatado = ''.join(c for c in fabricante_modelo if c.isalnum() or c in (' ', '_')).strip()
@@ -118,17 +126,12 @@ def criar_pastas(planilha_path, pasta_raiz):
             arquivo_descricao = os.path.join(nova_pasta, "descricao.txt")
             with open(arquivo_descricao, "w", encoding="utf-8") as arquivo:
                 descricao = descricao_base.format(
-                    Fabricante_Modelo=fabricante_modelo,
-                    DATA=data,
-                    ANO=ano,
-                    QTD=qtd,
-                    ACABAMENTO=acabamento,
-                    SKU=sku,
-                    CONCORRÊNCIA=concorrencia,
-                    OLX_FACE=olx_face,
-                    TOTAL=total,
-                    POSTADO=postado,
-                    VISITAS=visitas
+                    Marca=marca,
+                    Modelo=modelo,
+                    Aro=aro,
+                    cor=cor,
+                    Material=material,
+                    sku=sku
                 )
                 arquivo.write(descricao)
                 print(f"Arquivo de descrição criado: {arquivo_descricao}")
