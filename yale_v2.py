@@ -32,8 +32,7 @@ Abaixo estão listadas todas as calotas organizadas pelo script Calota Organizer
 """
 
 # Texto base para cada entrada na aprovação (EXATAMENTE como você forneceu)
-template_aprovacao = """
-------------------------
+template_aprovacao = """------------------------
 
 *{Fabricante_Modelo}*
 
@@ -42,9 +41,9 @@ Acabamento: {ACABAMENTO}
 SKU: {SKU}
 *Concorrência: {CONCORRÊNCIA}*
 *Preço OLX / Facebook: {OLX_FACE}*
+*Preço Mercado Livre: {ML}*
 
----------------
-"""
+---------------"""
 
 # Função para criar pastas e arquivos
 def criar_pastas(planilha_path, pasta_raiz):
