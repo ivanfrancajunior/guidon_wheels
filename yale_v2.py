@@ -66,7 +66,7 @@ def criar_pastas(planilha_path, pasta_raiz):
         # Verificar se as colunas necessárias existem
         colunas_necessarias = [
             "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO",
-            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE","ML" "TOTAL", "POSTADO", "VISITAS",'USADO'
+            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "COTAÇÃO","OLX | FACE","ML", "TOTAL", "POSTADO", "VISITAS",'USADO'
         ]
         for coluna in colunas_necessarias:
             if coluna not in df.columns:
@@ -89,6 +89,7 @@ def criar_pastas(planilha_path, pasta_raiz):
             qtd = row["QTD"]
             acabamento = row["ACABAMENTO"]
             sku = row["NÚMERO DE PEÇA / SKU"]
+            cotação = row["COTAÇÃO"]
             concorrencia = row["CONCORRÊNCIA"]
             olx_face = row["OLX | FACE"]
             ml = row["ML"]
