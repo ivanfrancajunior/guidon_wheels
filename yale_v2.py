@@ -1,8 +1,10 @@
+#%%
 import os
 import pandas as pd
+import re
 
 # Caminho para a planilha
-planilha_path = r"C:\Users\Junior\Downloads\planilha_guidon_ roda_de_ferro_e_calota.xlsx"  # Altere para o caminho da sua planilha
+planilha_path = r"C:\Users\Junior\Downloads\planilha_guidon_ roda_de_ferro_e_calota.xlsx"
 
 # Caminho padrão para a criação das pastas
 pasta_raiz = r"C:\Users\Junior\Desktop\calotas\teste_mar_25"
@@ -10,6 +12,15 @@ pasta_raiz = r"C:\Users\Junior\Desktop\calotas\teste_mar_25"
 # Caminhos para os arquivos de texto base
 caminho_descricao_base = r"descricao_base.txt"
 caminho_cabecalho_aprovacao = r"cabecalho_aprovacao.txt"
+
+raw_marcas_conhecidas = [
+    "VW", "GM", "TOYOTA", "HYUNDAI", "VOLKSWAGEN", "CHEVROLET", "MITSUBISHI", "RENAULT", "CITROEN", "JAC", "NOOVA", "FERRARO",
+    "FIAT", "KIA", "MANGELS", "ITAL", "TITANIO", "LIMBRA", "BMW", "LAND ROVER",
+    "NISSAN", "MERCEDES", "FORD", "GRID"
+]
+
+# Array de marcas conhecidas
+marcas_conhecidas = [label.title() for label in raw_marcas_conhecidas ]
 
 # Ler os textos base dos arquivos
 with open(caminho_descricao_base, "r", encoding="utf-8") as arquivo:
@@ -39,27 +50,20 @@ def criar_pastas(planilha_path, pasta_raiz):
         if not os.path.exists(planilha_path):
             raise FileNotFoundError(f"O arquivo '{planilha_path}' não foi encontrado.")
 
-        # Ler a planilha com base na extensão
-        if planilha_path.endswith('.csv'):
-            df = pd.read_csv(planilha_path)
-        elif planilha_path.endswith('.xlsx'):
-            df = pd.read_excel(planilha_path)
-        else:
-            raise ValueError("Formato de arquivo não suportado. Use .csv ou .xlsx.")
-
-        # Remover espaços extras dos nomes das colunas
+        # Ler a planilha
+        df = pd.read_excel(planilha_path)
         df.columns = df.columns.str.strip()
 
-        # Verificar se as colunas necessárias existem
+        # Verificar colunas necessárias
         colunas_necessarias = [
             "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO", "MATERIAL",
-            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE", "ML", "TOTAL", "POSTADO", "VISITAS", 'USADO'
+            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE", "ML", "TOTAL", "POSTADO", "VISITAS", "USADO"
         ]
         for coluna in colunas_necessarias:
             if coluna not in df.columns:
                 raise KeyError(f"A coluna '{coluna}' não foi encontrada na planilha.")
 
-        # Criar o diretório raiz se ele não existir
+        # Criar diretório raiz
         if not os.path.exists(pasta_raiz):
             os.makedirs(pasta_raiz)
             print(f"Diretório raiz criado: {pasta_raiz}")
@@ -70,66 +74,72 @@ def criar_pastas(planilha_path, pasta_raiz):
 
         # Iterar sobre os dados da planilha
         for _, row in df.iterrows():
-            data = row["DATA"]
             fabricante_modelo = row["FABRICANTE | MODELO"]
-            ano = row["ANO"]  # Usado apenas no arquivo individual
-            qtd = row["QTD"]
             acabamento = row["ACABAMENTO"]
             material = row["MATERIAL"]
             sku = row["NÚMERO DE PEÇA / SKU"]
-            concorrencia = row["CONCORRÊNCIA"]
-            olx_face = row["OLX | FACE"]
-            ml = row["ML"]
-            total = row["TOTAL"]
-            postado = row["POSTADO"]
-            visitas = row["USADO"]
 
-            # Remover o prefixo "Calota Aro ..." se existir
+            # Lógica para entradas que começam com "Calota Aro"
             if fabricante_modelo.startswith("Calota Aro"):
                 fabricante_modelo = fabricante_modelo.replace("Calota Aro ", "", 1)
+                aro = fabricante_modelo[:2].strip()  # Extrai o aro
+                modelo = fabricante_modelo[2:].strip()  # Restante é o modelo
 
-            # Separar marca e modelo
-            partes = fabricante_modelo.split(" ", 1)
-            if len(partes) == 2:
-                marca, modelo = partes
-            else:
-                marca, modelo = "Desconhecido", fabricante_modelo
+                # Identificar a marca no modelo
+                marca = "Desconhecida"
+                for m in marcas_conhecidas:
+                    if re.search(r'\b' + re.escape(m) + r'\b', modelo, re.IGNORECASE):
+                        marca = m
+                        modelo = re.sub(r'\b' + re.escape(m) + r'\b', '', modelo, flags=re.IGNORECASE).strip().title()
+                        break
 
-            # Extrair o diâmetro (aro)
-            if modelo and modelo[0].isdigit():
-                aro = modelo[:2]  # Assume que o diâmetro está nos primeiros 2 caracteres
-                modelo = modelo[2:].strip()  # Remove o diâmetro do modelo
+            # Lógica para entradas normais
             else:
+                partes = fabricante_modelo.split(" ", 1)
+                marca = partes[0] if len(partes) > 0 else "Desconhecida"
+                modelo = partes[1].strip() if len(partes) > 1 else fabricante_modelo
+
+                # Extrair aro do modelo
                 aro = "Desconhecido"
+                if modelo and modelo[0].isdigit():
+                    aro_parte = modelo.split(" ")[0]
+                    aro = aro_parte.replace("x", "").replace("'", "").strip()
+                    modelo = modelo[len(aro_parte):].strip()
 
-            # Corrigir o modelo (remover palavras indesejadas como "Grid")
-            modelo = modelo.replace("Grid", "").strip()
+                # Reidentificar a marca após remoção de "Grid"
+                for m in marcas_conhecidas:
+                    if re.search(r'\b' + re.escape(m) + r'\b', modelo, re.IGNORECASE):
+                        marca = m
+                        modelo = re.sub(r'\b' + re.escape(m) + r'\b', '', modelo, flags=re.IGNORECASE).strip()
+                        break
 
-            cor = acabamento  # Assume que "Acabamento" é a cor
+            # Substituir abreviações de marca
+            if marca == "VW":
+                marca = "Volkswagen"
+            elif marca == "GM":
+                marca = "Chevrolet"
+            elif marca == "GRID":
+                marca = "GRID"  # Mantém "GRID" como marca
 
-            # Remover caracteres inválidos e substituir espaços por underscores
+            # Remover caracteres inválidos do nome da pasta
             nome_formatado = ''.join(c for c in fabricante_modelo if c.isalnum() or c in (' ', '_')).strip()
             nome_formatado = nome_formatado.replace(' ', '_')
-
-            # Adicionar o contador ao nome da pasta
             nome_pasta = f"{str(contador).zfill(2)}_{nome_formatado}"
             nova_pasta = os.path.join(pasta_raiz, nome_pasta)
 
-            # Criar a pasta se ela ainda não existir
+            # Criar pasta
             if not os.path.exists(nova_pasta):
                 os.makedirs(nova_pasta)
                 print(f"Pasta criada: {nova_pasta}")
-            else:
-                print(f"Pasta já existe: {nova_pasta}")
 
-            # Criar o arquivo de descrição dentro da pasta
+            # Criar descrição
             arquivo_descricao = os.path.join(nova_pasta, "descricao.txt")
             with open(arquivo_descricao, "w", encoding="utf-8") as arquivo:
                 descricao = descricao_base.format(
                     Marca=marca,
                     Modelo=modelo,
                     Aro=aro,
-                    cor=cor,
+                    cor=acabamento,
                     Material=material,
                     sku=sku
                 )
@@ -139,13 +149,13 @@ def criar_pastas(planilha_path, pasta_raiz):
             # Adicionar informações ao conteúdo de aprovação
             conteudo_aprovacao += template_aprovacao.format(
                 Fabricante_Modelo=fabricante_modelo,
-                DATA=data,
-                QTD=qtd,
+                DATA=row["DATA"],
+                QTD=row["QTD"],
                 ACABAMENTO=acabamento,
                 SKU=sku,
-                CONCORRÊNCIA=concorrencia,
-                OLX_FACE=olx_face,
-                ML=ml
+                CONCORRÊNCIA=row["CONCORRÊNCIA"],
+                OLX_FACE=row["OLX | FACE"],
+                ML=row["ML"]
             )
 
             contador += 1
@@ -157,7 +167,8 @@ def criar_pastas(planilha_path, pasta_raiz):
             print(f"Arquivo de aprovação criado: {arquivo_aprovacao}")
 
     except Exception as e:
-        print(f"Erro ao criar pastas: {e}")
+        print(f"Erro: {e}")
 
 # Executar a função
 criar_pastas(planilha_path, pasta_raiz)
+# %%
