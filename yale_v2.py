@@ -66,7 +66,7 @@ def criar_pastas(planilha_path, pasta_raiz):
         # Verificar se as colunas necessárias existem
         colunas_necessarias = [
             "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO",
-            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE", "TOTAL", "POSTADO", "VISITAS"
+            "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "OLX | FACE","ML" "TOTAL", "POSTADO", "VISITAS",'USADO'
         ]
         for coluna in colunas_necessarias:
             if coluna not in df.columns:
@@ -91,9 +91,11 @@ def criar_pastas(planilha_path, pasta_raiz):
             sku = row["NÚMERO DE PEÇA / SKU"]
             concorrencia = row["CONCORRÊNCIA"]
             olx_face = row["OLX | FACE"]
+            ml = row["ML"]
             total = row["TOTAL"]
             postado = row["POSTADO"]
             visitas = row["VISITAS"]
+            usado = row["USADO"]
 
             # Remover caracteres inválidos e substituir espaços por underscores
             nome_formatado = ''.join(c for c in fabricante_modelo if c.isalnum() or c in (' ', '_')).strip()
@@ -138,6 +140,7 @@ def criar_pastas(planilha_path, pasta_raiz):
                 SKU=sku,
                 CONCORRÊNCIA=concorrencia,
                 OLX_FACE=olx_face,
+                ML=ml
             )
 
             contador += 1
