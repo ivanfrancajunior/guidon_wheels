@@ -1,5 +1,5 @@
 <h1 align="center">
-Calota Organizer - Versão 1.2
+Calota Organizer - Versão 1.3
  </h1>
 
 <p align="center">
@@ -20,13 +20,25 @@ O **Calota Organizer** é uma ferramenta Python projetada para organizar informa
   <li><strong>Leitura de Planilha:</strong> Suporta arquivos .csv e .xlsx.</li>
   <li><strong>Criação de Pastas e Arquivos:</strong> Gera pastas nomeadas com base no fabricante e modelo, contendo um arquivo `descricao.txt` detalhado.</li>
   <li><strong>Arquivo Consolidado de Aprovação:</strong> Cria um arquivo `aprovacao.txt` no diretório raiz, listando todas as rodas/calotas organizadas.</li>
-  <li><strong>Tratamento de Nomes de Colunas:</strong> Remove automaticamente espaços extras nos nomes das colunas da planilha para evitar erros.</li>
+  <li><strong>Identificação de Marcas Conhecidas:</strong> Identifica automaticamente marcas como "VW", "GM", "FIAT", "GRID", etc., e substitui abreviações (ex.: "VW" → "Volkswagen").</li>
+  <li><strong>Tratamento Especial para "GRID":</strong> Trata "GRID" como uma marca genérica para rodas e mantém sua presença no campo do modelo quando necessário.</li>
+  <li><strong>Extração Automática de Aro e Modelo:</strong> Para entradas que começam com "Calota Aro", extrai o diâmetro (aro) e o modelo de forma consistente.</li>
+  <li><strong>Remoção de Caracteres Inválidos:</strong> Remove caracteres inválidos dos nomes de pastas para evitar problemas de criação.</li>
   <li><strong>Codificação UTF-8:</strong> Garante compatibilidade com caracteres especiais em todos os arquivos gerados.</li>
 </ul>
 
 ---
 
-## **Alterações na Versão 1.2**
+## **Alterações na Versão 1.3**
+
+### **Novidades**
+
+<ul>
+  <li><strong>Tratamento Especial para "GRID":</strong> O termo "GRID" agora é reconhecido como uma marca válida e não é removido do modelo. Exemplo: "Calota Aro 14 GRID Fiat Palio" → Marca: "GRID", Modelo: "Fiat Palio".</li>
+  <li><strong>Melhoria na Extração de Aro e Modelo:</strong> Para entradas que começam com "Calota Aro", o script extrai os próximos 2 caracteres como o diâmetro (aro) e trata o restante como o modelo.</li>
+  <li><strong>Array de Marcas Conhecidas Expandido:</strong> Adicionadas mais marcas ao array, incluindo "RENAULT", "CITROEN", "JAC", "NOOVA", "FERRARO", entre outras.</li>
+  <li><strong>Substituição de Abreviações de Marca:</strong> "VW" é substituído por "Volkswagen", "GM" por "Chevrolet", e "GRID" permanece inalterado.</li>
+</ul>
 
 ### **Correções e Melhorias**
 
@@ -34,8 +46,6 @@ O **Calota Organizer** é uma ferramenta Python projetada para organizar informa
   <li><strong>Remoção de Espaços Extras nos Nomes de Colunas:</strong> Ajuste no código para remover automaticamente espaços extras nos nomes das colunas da planilha.</li>
   <li><strong>Correção de Erros Relacionados às Colunas:</strong> Adicionada uma verificação para garantir que todas as colunas necessárias existam na planilha.</li>
   <li><strong>Template de Aprovação Exato:</strong> O template de aprovação foi ajustado para seguir exatamente o formato fornecido pelo usuário.</li>
-  <li><strong>Manutenção do Campo "Ano":</strong> O campo `ANO` continua sendo usado no arquivo `descricao.txt`, mas foi removido do arquivo `aprovacao.txt`.</li>
-  <li><strong>Compatibilidade com Diferentes Formatos de Planilha:</strong> O script agora suporta tanto arquivos `.csv` quanto `.xlsx`.</li>
   <li><strong>Melhoria na Mensagem de Erro:</strong> Mensagens de erro foram refinadas para facilitar a identificação de problemas.</li>
 </ul>
 
@@ -51,6 +61,7 @@ O **Calota Organizer** é uma ferramenta Python projetada para organizar informa
     <ul>
       <li><code>pandas</code></li>
       <li><code>os</code></li>
+      <li><code>re</code> (módulo padrão do Python)</li>
     </ul>
   </li>
 </ul>
@@ -67,7 +78,7 @@ pip install pandas
   <li><strong>Baixe ou Clone o Script:</strong> Salve o arquivo <code>calota_organizer.py</code> em seu computador.</li>
   <li><strong>Prepare a Planilha:</strong> Certifique-se de que sua planilha contenha as seguintes colunas:
     <pre>
-DATA, FABRICANTE | MODELO, ANO, QTD, ACABAMENTO, NÚMERO DE PEÇA / SKU, CONCORRÊNCIA, OLX | FACE, TOTAL, POSTADO, VISITAS
+DATA, FABRICANTE | MODELO, ANO, QTD, ACABAMENTO, MATERIAL, NÚMERO DE PEÇA / SKU, CONCORRÊNCIA, OLX | FACE, ML, TOTAL, POSTADO, VISITAS, USADO
     </pre>
   </li>
   <li><strong>Configure o Script:</strong> Abra o arquivo <code>calota_organizer.py</code> e ajuste os seguintes parâmetros:
@@ -101,19 +112,24 @@ Dentro de cada pasta, haverá um arquivo `descricao.txt` com informações detal
 #### **Exemplo de `descricao.txt`**
 
 ```plaintext
-Descrição da Calota: GM Corsa 14''
-Data: 2023-03-15
-Ano: 2020
-Quantidade: 10
-Acabamento: Cromado
-SKU: SKU123
-Concorrência: Modelo X
-Preço OLX / Facebook: R$ 100
-Total: R$ 1000
-Postado: Sim
-Visitas: 500
+Guidon - Rodas Antigas traz para você as últimas novidades!
 
-Esta é uma descrição gerada automaticamente pelo script Calota Organizer.
+**Características e especificações:**
+- **Marca:** GRID
+- **Modelo:** Fiat Palio
+- **Diâmetro:** 14''
+- **Acabamento/Cor:** Prata
+- **Material:** Plástico
+- **Garantia:** 3 meses
+- **SKU:** x
+
+**VALOR REFERE-SE AO KIT COMPLETO (4 CALOTAS)**
+
+[Dúvidas frequentes...]
+
+**INFORMAÇÕES IMPORTANTES:**
+- **MERCADO ENVIO TRANSPORTA APENAS 1 KIT (4 CALOTAS) POR PEDIDO.**
+[Restante do texto...]
 ```
 
 ### **Arquivo Consolidado de Aprovação**
@@ -123,33 +139,29 @@ No diretório raiz, será gerado um arquivo `aprovacao.txt` com o seguinte forma
 #### **Exemplo de `aprovacao.txt`**
 
 ```plaintext
-Arquivo de Aprovação de Rodas
-============================
-
-Abaixo estão listadas todas as calotas organizadas pelo script Calota Organizer:
-
 ------------------------
 
-*GM Corsa 14''*
+*Calota Aro 14 GRID Fiat Palio*
 
-Data: 2023-03-15
 Quantidade: 10
 Acabamento: Cromado
 SKU: SKU123
-*Concorrência: Modelo X
-Preço OLX / Facebook: R$ 100
+*Concorrência: Modelo X*
+*Preço OLX / Facebook: R$ 100*
+*Preço Mercado Livre: R$ 120*
+
 ---------------
 
 ------------------------
 
 *Honda City 15''*
 
-Data: 2023-03-16
 Quantidade: 5
 Acabamento: Polido
 SKU: SKU456
-*Concorrência: Modelo Y
-Preço OLX / Facebook: R$ 150
+*Concorrência: Modelo Y*
+*Preço OLX / Facebook: R$ 150*
+*Preço Mercado Livre: R$ 170*
 
 ---------------
 ...

@@ -4,10 +4,14 @@ import pandas as pd
 import re
 
 # Caminho para a planilha
-planilha_path = r"C:\Users\Junior\Downloads\planilha_guidon_ roda_de_ferro_e_calota.xlsx"
+planilha_path = r"path_planilha"
+
+# planilha_path = r"C:\Users\Junior\Downloads\planilha_guidon_ roda_de_ferro_e_calota.xlsx"
 
 # Caminho padrão para a criação das pastas
-pasta_raiz = r"C:\Users\Junior\Desktop\calotas\teste_mar_25"
+pasta_raiz = r"seu_path"
+
+# pasta_raiz = r"C:\Users\Junior\Desktop\calotas\teste_mar_25"
 
 # Caminhos para os arquivos de texto base
 caminho_descricao_base = r"descricao_base.txt"
