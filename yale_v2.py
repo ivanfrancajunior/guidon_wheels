@@ -65,7 +65,7 @@ def criar_pastas(planilha_path, pasta_raiz):
 
         # Verificar se as colunas necessárias existem
         colunas_necessarias = [
-            "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO",
+            "DATA", "FABRICANTE | MODELO", "ANO", "QTD", "ACABAMENTO","MATERIAL",
             "NÚMERO DE PEÇA / SKU", "CONCORRÊNCIA", "COTAÇÃO","OLX | FACE","ML", "TOTAL", "POSTADO", "VISITAS",'USADO'
         ]
         for coluna in colunas_necessarias:
@@ -88,6 +88,7 @@ def criar_pastas(planilha_path, pasta_raiz):
             ano = row["ANO"]  # Usado apenas no arquivo individual
             qtd = row["QTD"]
             acabamento = row["ACABAMENTO"]
+            material = row["MATERIAL"]
             sku = row["NÚMERO DE PEÇA / SKU"]
             cotação = row["COTAÇÃO"]
             concorrencia = row["CONCORRÊNCIA"]
