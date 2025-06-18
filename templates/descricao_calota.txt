@@ -3,7 +3,7 @@ Guidon - Rodas Antigas traz para você as últimas novidades!
 **Características e especificações:**
 - **Marca:** {Marca}
 - **Modelo:** {Modelo}
-- **Diâmetro:** {Aro}''
+- **Diâmetro:** {Diametro}''
 - **Acabamento/Cor:** {cor}
 - **Material:** {Material}
 - **Garantia:** 3 meses
@@ -23,7 +23,7 @@ R: São encaixes práticos e seguros, compatíveis com o modelo indicado.
 R: Pronta entrega! Enviamos em até 24 horas após confirmação do pagamento.
 
 **P: As calotas servem em outros modelos de carro?**
-R: Esta oferta é específica para o {Modelo}. Consulte-nos para outros modelos.
+R: Esta oferta é específica para a {Modelo}. Consulte-nos para outros modelos.
 
 **P: Como funciona a entrega?**
 R: Entramos em contato após a compra para confirmar o CEP e agilizar o envio via transportadora.
