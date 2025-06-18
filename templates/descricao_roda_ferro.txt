@@ -3,7 +3,8 @@ Guidon - Rodas Antigas traz para você as últimas novidades!
 **Características e especificações:**
 - **Marca:** {Marca}
 - **Modelo:** {Modelo}
-- **Diâmetro:** {Aro}''
+- **Aro:** {Aro}''
+- **Tala:** {Tala}''
 - **Acabamento/Cor:** {cor}
 - **Material:** {Material}
 - **Garantia:** 3 meses
@@ -63,4 +64,4 @@ ACEITAMOS ENCOMENDAS - ARRUMAMOS QUALQUER TIPO DE RODA.
 
 Clique no botão "Comprar agora" para garantir o melhor preço!
 
-Garantia do vendedor: 90 diasdescricao_roda_ferro_calotao
+Garantia do vendedor: 90 dias
