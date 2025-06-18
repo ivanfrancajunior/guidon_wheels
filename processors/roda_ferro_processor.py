@@ -5,13 +5,15 @@ from config import TEMPLATE_APROVACAO
 class RodaFerroProcessor(ProdutoProcessor):
     def processar(self):
         """Processa os dados específicos para rodas de ferro."""
-        colunas_necessarias = ["DATA", "FABRICANTE", "MODELO", "QTD", "ACABAMENTO", "MATERIAL", "SKU"]
+        colunas_necessarias = ["DATA", "FABRICANTE", "MODELO", "QTD", "ARO","TALA","ACABAMENTO", "MATERIAL", "SKU"]
         self.carregar_planilha(colunas_necessarias)
 
         contador = 1
         for _, row in self.dados.iterrows():
             fabricante = row["FABRICANTE"]
             modelo = row["MODELO"]
+            aro = row["ARO"]
+            tala = row["TALA"]
 
             # Substituir abreviações de marca, se necessário
             if fabricante == "VW":
@@ -28,7 +30,8 @@ class RodaFerroProcessor(ProdutoProcessor):
             dados_produto = {
                 "Marca": fabricante,
                 "Modelo": modelo,
-                "Aro": "AROXTALA",  # Exemplo, ajuste conforme necessário
+                "Aro": aro,
+                "Tala":tala,
                 "cor": row["ACABAMENTO"],
                 "Material": row["MATERIAL"],
                 "sku": row["SKU"]
