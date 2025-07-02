@@ -15,7 +15,6 @@ TEMPLATE_APROVACAO = """------------------------
 
 *{Fabricante_Modelo}*
 
-Data: {DATA}
 Quantidade: {QTD}
 Acabamento: {ACABAMENTO}
 SKU: {SKU}
