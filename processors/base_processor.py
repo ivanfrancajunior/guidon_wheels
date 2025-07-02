@@ -43,15 +43,24 @@ class ProdutoProcessor:
         """Cria o arquivo consolidado de aprovação no diretório raiz."""
         conteudo_aprovacao = "=== Aprovação ===\n"
         for _, row in self.dados.iterrows():
+
+            try:
+                olx_face = round(float(row.get("OLX | FACE", 0)), 2)
+                ml = round(float(row.get("ML", "")), 2)
+
+            except ValueError:
+                olx_face = 0.00
+                ml = 0.00
+
             conteudo_aprovacao += template_aprovacao.format(
-                Fabricante_Modelo=row.get("FABRICANTE | MODELO", row.get("FABRICANTE", "")),
-                DATA=row.get("DATA", ""),
+                 DATA=row.get("DATA", ""),
+                Fabricante_Modelo=row.get("MODELO", row.get("MODELO", "")),
                 QTD=row.get("QTD", ""),
                 ACABAMENTO=row.get("ACABAMENTO", ""),
                 SKU=row.get("SKU", ""),
                 CONCORRÊNCIA=row.get("CONCORRÊNCIA", ""),
-                OLX_FACE=row.get("OLX | FACE", ""),
-                ML=row.get("ML", "")
+                OLX_FACE=olx_face,
+                ML=ml
             )
             conteudo_aprovacao += "\n"
 
