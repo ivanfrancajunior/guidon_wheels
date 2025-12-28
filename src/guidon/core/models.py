@@ -1,78 +1,82 @@
-from pydantic import BaseModel, Field, field_validator, computed_field
-from typing import Optional
+from pydantic import BaseModel, Field, computed_field, field_validator
 
-# -------------------------------------------------------------------------
-# CLASSE BASE: Regras que valem para Calotas E Rodas
-# -------------------------------------------------------------------------
+
 class ProdutoBase(BaseModel):
-    # 'alias' serve para ler a coluna do Excel com nome feio e salvar na variável bonita
+    data: str = Field(default="", alias="DATA")
     fabricante: str = Field(..., alias="FABRICANTE")
     modelo: str = Field(..., alias="MODELO")
-    sku: str = Field(..., alias="SKU")
-
-    # Campos com valor padrão (se a célula estiver vazia no Excel)
+    numero_peça: str = Field(..., alias="NÚMERO DE PEÇA / SKU")
     qtd: int = Field(default=0, alias="QTD")
     acabamento: str = Field(default="", alias="ACABAMENTO")
     material: str = Field(default="", alias="MATERIAL")
-
-    # Preços
-    preco_olx: float = Field(default=0.0, alias="OLX | FACE")
+    preco_avista: float = Field(default=0.0, alias="OLX | FACE")
     preco_ml: float = Field(default=0.0, alias="ML")
     concorrencia: str = Field(default="", alias="CONCORRÊNCIA")
 
-    # --- VALIDADOR 1: Limpeza de Texto ---
-    # Roda automaticamente antes de salvar os dados.
-    # Substitui aquele monte de .strip() e .upper() que tinha no seu código.
-    @field_validator('fabricante', 'modelo', 'acabamento', 'material', mode='before')
-    def normalizar_texto(cls, v):
-        if isinstance(v, str):
-            return v.strip().upper()
-        return v
+    @field_validator("fabricante", "modelo", "acabamento", "material", mode="before")
+    def validate_columns_names(cls, value):
+        if isinstance(value, str):
+            return value.strip().upper()
+        return value
 
-    # --- VALIDADOR 2: Correção de Marcas (Regra de Negócio) ---
-    @field_validator('fabricante')
-    def corrigir_marcas(cls, v):
-        if v == "VW":
-            return "VOLKSWAGEN"
-        elif v == "GM":
-            return "CHEVROLET"
-        return v
+    @field_validator("fabricante")
+    def convert_lablel_names(cls, value):
+        if value == "VW" or value == "Volks":
+            return "Volkswagen"
+        elif value == "GM":
+            return "Chevrolet"
+        return value
 
-    # --- VALIDADOR 3: Preços Seguros ---
-    # Garante que o programa não quebre se tiver texto na coluna de preço
-    @field_validator('preco_olx', 'preco_ml', mode='before')
-    def tratar_precos(cls, v):
-        if v == "" or v is None:
+    # VALIDADOR 3: Preços Seguros ---
+
+    @field_validator("preco_avista", "preco_ml", mode="before")
+    def price_handler(cls, value):
+        if value is None or str(value).strip() == "":
             return 0.0
+
+        if isinstance(value, (float, int)):
+            return float(value)
+
+        texto = str(value)
+        texto = texto.replace("R$", "").replace(" ", "")
+        texto = texto.replace(".", "")
+        texto = texto.replace(",", ".") 
+
         try:
-            return float(v)
+            return float(texto)
         except ValueError:
             return 0.0
 
-    # --- CAMPO CALCULADO: Nome da Pasta ---
-    # Isso substitui a função 'formatar_nome_pasta' do seu antigo helpers.py
     @computed_field
-    def nome_pasta_formatado(self) -> str:
-        # Junta fabricante e modelo
+    def format_dirname(self) -> str:
         raw_name = f"{self.fabricante}_{self.modelo}"
 
-        # Lógica de limpeza: só deixa letras, números e underline
-        # (Copiado da lógica do seu legacy/utils/helpers.py)
-        nome_limpo = ''.join(c for c in raw_name if c.isalnum() or c in (' ', '_')).strip()
+        nome_limpo = "".join(
+            c for c in raw_name if c.isalnum() or c in (" ", "_")
+        ).strip()
 
-        return nome_limpo.replace(' ', '_')
+        return nome_limpo.replace(" ", "_")
 
-# -------------------------------------------------------------------------
-# MODELOS ESPECÍFICOS
-# -------------------------------------------------------------------------
-
-class Calota(ProdutoBase):
-    diametro: str = Field(..., alias="DIÂMETRO")
 
 class Roda(ProdutoBase):
-    aro: str = Field(..., alias="ARO")
-    tala: str = Field(..., alias="TALA")
+    offset: int = Field(default=0, alias="ET")
+    aro: int = Field(default=0, alias="ARO")
+    tala: float = Field(default=0, alias="TALA")
 
-class RodaLiga(Roda):
-    # Futuramente você pode adicionar campos específicos aqui (offset, furação)
-    pass
+
+class Calota(ProdutoBase):
+    diametro: str = Field(default="", alias="DIAMETRO")
+
+    @field_validator("preco_olx", "preco_ml", mode="before")
+    def handle_size(cls, value):
+        if value == "" or value is None:
+            return "X"
+
+
+class CalotaO(ProdutoBase):
+    diametro: str = Field(default="", alias="DIAMETRO")
+
+    @field_validator("preco_olx", "preco_ml", mode="before")
+    def handle_size(cls, value):
+        if value == "" or value is None:
+            return "X"
