@@ -7,8 +7,8 @@ from src.guidon.core.models import Calota, ProdutoBase, Roda
 
 
 class ContentBuilder:
-    def __init__(self, templates_dir: Path):
-        self.templates_dir = templates_dir
+    def __init__(self, templates_dir: Path = None):
+        self.templates_dir = Path(r"C:\Users\Junior\Desktop\guidon_wheels\templates")
         if not self.templates_dir.exists():
             print(
                 f"⚠️  ALERTA: Pasta de templates não encontrada em: {self.templates_dir}"
