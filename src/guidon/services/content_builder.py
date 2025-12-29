@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict
 
-from src.guidon.core.constants import FURACOES_CONHECIDAS  # <--- Import novo
+from src.guidon.core.constants import FURACOES_CONHECIDAS
 from src.guidon.core.models import Calota, ProdutoBase, Roda
 
 
@@ -29,7 +29,6 @@ class ContentBuilder:
         texto_upper = texto.upper()
 
         for furacao in FURACOES_CONHECIDAS:
-            # Se a furação da lista estiver dentro do nome do produto
             if furacao.upper() in texto_upper:
                 extra["furacao"] = furacao.replace(",", ".")
                 break
@@ -42,7 +41,6 @@ class ContentBuilder:
             t2 = match_triplo.group(3).replace(".", ",")
             extra["tala"] = f"{t1} e {t2}"
         else:
-            # Caso 2: Pares Simples ou Mistos (15x6 ...)
             matches = re.findall(r"(\d{2})[xX](\d{1,2}(?:[.,]\d)?)", texto)
             if matches:
                 aros = sorted(list(set(m[0] for m in matches)))
@@ -53,10 +51,14 @@ class ContentBuilder:
         return extra
 
     def _prepare_context(self, product: ProdutoBase) -> Dict[str, Any]:
+        # 1. Pega dados brutos do Model
         ctx = product.model_dump(exclude_none=True)
+
+        # 2. Formata dinheiro
         ctx["preco_avista"] = self._format_money(product.preco_avista)
         ctx["preco_ml"] = self._format_money(product.preco_ml)
 
+        # 3. Lógica de Rodas (Regex + Lista)
         if isinstance(product, Roda):
             medidas = self._extract_measures_from_name(product.modelo)
 
@@ -68,7 +70,6 @@ class ContentBuilder:
             ):
                 ctx.update(medidas)
             else:
-                # Garante chaves
                 if "aro" not in ctx:
                     ctx["aro"] = medidas["aro"]
                 if "tala" not in ctx:
@@ -76,18 +77,29 @@ class ContentBuilder:
                 if "furacao" not in ctx:
                     ctx["furacao"] = medidas["furacao"]
 
+        # 4. === COMPATIBILIDADE COM TEMPLATES ===
+        # Cria aliases para satisfazer os arquivos .txt antigos
         ctx["cor"] = ctx.get("acabamento", "")
+        ctx["numero_peça"] = ctx.get("sku", "")  # Template pede {numero_peça}
+        ctx["et"] = ctx.get("offset", "")  # Template pede {et}
+
+        # Cria versões com primeira letra maiúscula (ex: {Modelo}, {Diametro})
+        ctx["Modelo"] = product.modelo
+        ctx["Material"] = product.material
+        if "diametro" in ctx:
+            ctx["Diametro"] = ctx["diametro"]
+
         return {k: str(v) for k, v in ctx.items()}
 
     def create_content(self, product: ProdutoBase, product_folder: Path):
-
+        # Seleção de Template
         if isinstance(product, Calota):
             templates = ("descricao_calota.txt", "descricao_grupo_calotas.txt")
-        elif (
-            isinstance(product, Roda)
-            and "FERRO" in getattr(product, "material", "").upper()
-        ):
+
+        # ALTERAÇÃO PRINCIPAL: Aceita qualquer Roda (não só Ferro)
+        elif isinstance(product, Roda):
             templates = ("descricao_roda_ferro.txt", "descricao_grupo_rodas.txt")
+
         else:
             return
 
@@ -96,10 +108,12 @@ class ContentBuilder:
         try:
             context = self._prepare_context(product)
 
+            # Gera Descrição
             raw_desc = self._load_template(tpl_desc_name)
             final_desc = raw_desc.format(**context)
             (product_folder / "descricao.txt").write_text(final_desc, encoding="utf-8")
 
+            # Gera Grupo
             try:
                 raw_grupo = self._load_template(tpl_grupo_name)
                 final_grupo = raw_grupo.format(**context)
@@ -110,8 +124,10 @@ class ContentBuilder:
             print(f"   [📝] Textos gerados em: {product_folder.name}")
 
         except KeyError as e:
+            # Mostra quais chaves temos disponíveis para ajudar no debug
+            chaves_disponiveis = ", ".join(sorted(context.keys()))
             print(
-                f"   [X] Erro de Template: O arquivo .txt pede {{{e}}} mas o código gerou apenas: {list(context.keys())}"
+                f"   [X] Erro de Template: O arquivo pede {{{e}}} mas temos apenas: [{chaves_disponiveis}]"
             )
         except Exception as e:
             print(f"   [X] Erro ao gerar texto: {e}")
