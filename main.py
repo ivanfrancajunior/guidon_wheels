@@ -108,6 +108,7 @@ def main():
                 # O service decide se copia ou não
                 image_manager.process_images(produto, pasta_produto)
 
+                print(f"   ✅ [{idx}/{len(produtos)}] {dir_name} processado.")
                 sucessos += 1
 
             except Exception as e_item:
