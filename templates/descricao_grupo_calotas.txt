@@ -1,7 +1,7 @@
 *{modelo} - {acamabemto}*
 Quantidade: {qtd}
 Acabamento: {acamabemto}
-Numero de Peça: {numero_peça}
+Numero de Peça: {sku}
 Concorrência: {concorrencia}
 Preço OLX / Facebook: {preco_ml}
 Preço Mercado Livre: {preco_avista}

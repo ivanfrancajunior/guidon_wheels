@@ -1,12 +1,12 @@
 Carateristicas e especificações da Roda:
 
-Marca: {marca}
+Marca: {fabricante}
 Modelo: {modelo}
 Tamanho: Aro {aro}
 Largura: Tala {tala}
 Furação: {furacao}
-Offset (ET):  {et} mm ({et/10} cm)
-SKU:{numero_peça}
+Offset (ET): {offset} mm
+SKU: {sku}
 Acabamento: {acabamento}
 Material: {material}
 

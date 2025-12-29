@@ -8,7 +8,6 @@ class FileManager:
         self._ensure_output_dir()
 
     def _ensure_output_dir(self):
-        """Garante que a pasta raiz de saída existe."""
         if not self.output_dir.exists():
             try:
                 self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -17,19 +16,16 @@ class FileManager:
                 raise PermissionError(f"Não foi possível criar a pasta raiz {self.output_dir}: {e}")
 
     def create_folders(self, products: List[ProdutoBase]) -> Tuple[int, int]:
-        """
-        Recebe a lista de produtos processados e cria as pastas físicas.
-
-        Retorna uma tupla: (qtd_criada, qtd_existente)
-        """
         created_count = 0
         skipped_count = 0
 
         print(f"\n📂 Iniciando criação de estruturas em: {self.output_dir.name}")
 
-        for product in products:
+        # ALTERAÇÃO AQUI: Adicionamos o index (começando de 1)
+        for index, product in enumerate(products, start=1):
             try:
-                folder_name = product.format_dirname
+                # Monta o nome: "1_VOLKSWAGEN_FUSCA..."
+                folder_name = f"{index}_{product.format_dirname}"
 
                 target_path = self.output_dir / folder_name
 
@@ -38,8 +34,6 @@ class FileManager:
                     print(f"   [+] Pasta Criada: {folder_name}")
                     created_count += 1
                 else:
-                    # Se já existe, não faz nada (evita sobrescrever dados antigos)
-                    # print(f"   [!] Já existe: {folder_name}") # Descomente se quiser ver os logs de pulados
                     skipped_count += 1
 
             except Exception as e:

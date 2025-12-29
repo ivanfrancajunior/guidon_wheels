@@ -1,13 +1,14 @@
 Guidon - Rodas Antigas traz para você as últimas novidades!
 
-**Características e especificações:**
-- **Marca:** {Marca}
-- **Modelo:** {Modelo}
-- **Diâmetro:** {Diametro}cm (medidas aproximadas)
-- **Acabamento/Cor:** {cor}
-- **Material:** {Material}
-- **Garantia:** 3 meses
-- **SKU:** {sku}
+Características e especificações:
+- Marca: {fabricante}
+- Modelo: {modelo}
+- Diâmetro: {diametro} cm (medidas aproximadas)
+- Acabamento/Cor: {acabamento}
+- Material: {material}
+- Garantia: 3 meses
+- SKU: {sku}
+
 
 **VALOR REFERE-SE A UNIDADE DE CALOTA**
 

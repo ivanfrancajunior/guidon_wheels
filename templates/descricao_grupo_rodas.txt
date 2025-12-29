@@ -1,9 +1,11 @@
 {modelo}
 
-Et: {et}
-Codigo de Peça: {numero_peça}
+Et: {offset}
+Codigo de Peça: {sku}
 SKU: GUIDON: ...
 Acabamento: {acabamento}
 concorrencia: {concorrencia}
 Preço OLX / Facebook: {preco_avista}
 Mercado Livre: {preco_ml}
+
+----------------------------
