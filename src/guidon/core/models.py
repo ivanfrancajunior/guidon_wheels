@@ -40,7 +40,7 @@ class ProdutoBase(BaseModel):
         texto = str(value)
         texto = texto.replace("R$", "").replace(" ", "")
         texto = texto.replace(".", "")
-        texto = texto.replace(",", ".") 
+        texto = texto.replace(",", ".")
 
         try:
             return float(texto)
@@ -65,18 +65,18 @@ class Roda(ProdutoBase):
 
 
 class Calota(ProdutoBase):
-    diametro: str = Field(default="", alias="DIAMETRO")
+    diametro: str = Field(default="", alias="DIÂMETRO")
 
-    @field_validator("preco_olx", "preco_ml", mode="before")
+    @field_validator("diametro", mode="before")
     def handle_size(cls, value):
         if value == "" or value is None:
             return "X"
 
 
-class CalotaO(ProdutoBase):
+class Calotao(ProdutoBase):
     diametro: str = Field(default="", alias="DIAMETRO")
 
-    @field_validator("preco_olx", "preco_ml", mode="before")
+    @field_validator("diametro", mode="before")
     def handle_size(cls, value):
         if value == "" or value is None:
             return "X"
