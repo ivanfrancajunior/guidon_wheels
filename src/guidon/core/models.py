@@ -1,19 +1,25 @@
 from pydantic import BaseModel, Field, computed_field, field_validator
 
-class ProdutoBase(BaseModel):
-    # Nomes padronizados (snake_case) para uso interno no Python
-    data: str = Field(default="", alias="DATA")
-    fabricante: str = Field(..., alias="FABRICANTE")
-    modelo: str = Field(..., alias="MODELO")
-    sku: str = Field(..., alias="NÚMERO DE PEÇA / SKU") # Mudamos de numero_peça para sku
-    qtd: int = Field(default=0, alias="QTD")
-    acabamento: str = Field(default="", alias="ACABAMENTO")
-    material: str = Field(default="", alias="MATERIAL")
-    preco_avista: float = Field(default=0.0, alias="OLX | FACE")
-    preco_ml: float = Field(default=0.0, alias="ML")
-    concorrencia: str = Field(default="", alias="CONCORRÊNCIA")
 
-    # --- VALIDADORES (Mantive os seus, apenas ocultando para economizar espaço) ---
+class ProdutoBase(BaseModel):
+    # --- MUDANÇA: Todos os aliases agora estão em minúsculo para bater com o loader ---
+    data: str = Field(default="", alias="data")
+    fabricante: str = Field(..., alias="fabricante")
+    modelo: str = Field(..., alias="modelo")
+
+    # Atenção aqui: o loader vai transformar "NÚMERO..." em "número..."
+    sku: str = Field(..., alias="número de peça / sku")
+
+    qtd: int = Field(default=0, alias="qtd")
+    acabamento: str = Field(default="", alias="acabamento")
+    material: str = Field(default="", alias="material")
+
+    # Se no Excel estiver "OLX | FACE", o loader entrega "olx | face"
+    preco_avista: float = Field(default=0.0, alias="olx | face")
+    preco_ml: float = Field(default=0.0, alias="ml")
+    concorrencia: str = Field(default="", alias="concorrência")
+
+    # --- VALIDADORES (Lógica Mantida) ---
     @field_validator("fabricante", "modelo", "acabamento", "material", mode="before")
     def validate_columns_names(cls, value):
         if isinstance(value, str):
@@ -22,7 +28,8 @@ class ProdutoBase(BaseModel):
 
     @field_validator("fabricante")
     def convert_lablel_names(cls, value):
-        if value == "VW" or value == "Volks":
+        # Ajustei para verificar maiúsculo, já que o validator de cima (validate_columns_names) roda antes
+        if value == "VW" or value == "VOLKS":
             return "Volkswagen"
         elif value == "GM":
             return "Chevrolet"
@@ -34,7 +41,13 @@ class ProdutoBase(BaseModel):
             return 0.0
         if isinstance(value, (float, int)):
             return float(value)
-        texto = str(value).replace("R$", "").replace(" ", "").replace(".", "").replace(",", ".")
+        texto = (
+            str(value)
+            .replace("R$", "")
+            .replace(" ", "")
+            .replace(".", "")
+            .replace(",", ".")
+        )
         try:
             return float(texto)
         except ValueError:
@@ -43,16 +56,20 @@ class ProdutoBase(BaseModel):
     @computed_field
     def format_dirname(self) -> str:
         raw_name = f"{self.fabricante}_{self.modelo}"
-        nome_limpo = "".join(c for c in raw_name if c.isalnum() or c in (" ", "_")).strip()
+        nome_limpo = "".join(
+            c for c in raw_name if c.isalnum() or c in (" ", "_")
+        ).strip()
         return nome_limpo.replace(" ", "_")
 
+
 class Roda(ProdutoBase):
-    offset: int = Field(default=0, alias="ET") # Variável interna é 'offset'
-    aro: int = Field(default=0, alias="ARO")
-    tala: float = Field(default=0, alias="TALA")
+    offset: int = Field(default=0, alias="et")  # "ET" vira "et"
+    aro: int = Field(default=0, alias="aro")
+    tala: float = Field(default=0, alias="tala")
+
 
 class Calota(ProdutoBase):
-    diametro: str = Field(default="", alias="DIÂMETRO")
+    diametro: str = Field(default="", alias="diâmetro")
 
     @field_validator("diametro", mode="before")
     def handle_size(cls, v):
@@ -60,9 +77,10 @@ class Calota(ProdutoBase):
 
 
 class Calotao(ProdutoBase):
-    diametro: str = Field(default="", alias="DIÂMETRO")
+    diametro: str = Field(default="", alias="diâmetro")
 
     @field_validator("diametro", mode="before")
     def handle_size(cls, value):
         if value == "" or value is None:
             return "X"
+        return str(value).strip().upper()
