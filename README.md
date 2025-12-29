@@ -15,7 +15,7 @@ A partir de uma planilha (CSV ou Excel), o script separa cada item em sua própr
 1.  **descricao.txt**: Um texto completo com características técnicas para plataformas de venda.
 2.  **grupo.txt**: Uma versão resumida e formatada especificamente para postagens rápidas em grupos de WhatsApp/Facebook.
 
-Nesta versão 2.0, o foco foi transformar um script funcional em um código mais profissional, usando validação de dados e separação de tarefas, o que o torna um ótimo exemplo de **automação para portfólio**.
+Nesta versão 2.0, o foco foi transformar um script funcional em um código mais profissional, usando validação de dados e separação de tarefas.
 
 ---
 
