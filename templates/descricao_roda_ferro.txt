@@ -1,67 +1,111 @@
-Guidon - Rodas Antigas traz para você as últimas novidades!
+Carateristicas e especificações da Roda:
 
-**Características e especificações:**
-- **Marca:** {Marca}
-- **Modelo:** {Modelo}
-- **Aro:** {Aro}''
-- **Tala:** {Tala}''
-- **Acabamento/Cor:** {cor}
-- **Material:** {Material}
-- **Garantia:** 3 meses
-- **SKU:** {sku}
+Marca: {marca}
+Modelo: {modelo}
+Tamanho: Aro {aro}
+Largura: Tala {tala}
+Furação: {furacao}
+Offset (ET):  {et} mm ({et/10} cm)
+SKU:{numero_peça}
+Acabamento: {acabamento}
+Material: {material}
 
-**VALOR REFERE-SE A UNIDADE DE RODA**
+Garantia: 3 Meses (90 Dias)
 
-Dúvidas frequentes:
 
-P: A empresa tem loja física?
-R: A Guidon Rodas tem loja física localizada no RJ (Jacarépagua)
+=============================================================
 
-P: Como é feita a restauração das rodas usadas?
-R: Usamos equipamentos da melhor qualidade,rodas sem empenos ou trincas.
+POR QUE COMPRAR COM A GUIDON RODAS?
+ESPECIALISTA EM RODAS – SOMOS REFERENCIA NO BRASIL TODO
 
-P: Quanto tempo demora o envio após minha compra?
-R: Trabalhos com pronta entrega,após a confirmação da compra,seu produto é enviado em até 24 horas
+Com mais de 40 anos de história no setor automotivo, a Guidon Rodas é referência em qualidade, variedade e atendimento técnico especializado.
 
-P: Como funciona a entrega?
-R: Após sua compra entramos em contato imediatamente para pegar informações sobre o cep e organizar a entrega,enviamos via transportadora.
+Nossas rodas passam por um processo rigoroso de avaliação, reparo e acabamento profissional, utilizando equipamentos de ponta.
 
-===================================================
+Produto 100% verificado, sem empenos ou trincas.
 
-INFORMAÇÕES IMPORTANTES:
+==============================================================
 
-O MERCADO ENVIO SÓ TRANSPORTA UMA UNIDADE DE RODA
+PERGUNTAS FREQUENTES
+- Como é feita a restauração das rodas usadas?
+Usamos equipamentos da melhor qualidade,rodas sem empenos ou trincas.
 
-SOLICITAR COTAÇÂO DE FRETE PARA 2 OU MAIS RODAS
+- Quanto tempo demora o envio após minha compra?
+Trabalhamos com pronta entrega, após a confirmação da compra, seu produto é despachado em até 24 horas
 
-Calota Vendida Separadamente
+- Como funciona a entrega?
+Após sua compra entramos em contato imediatamente para pegar informações tais como: NOME,CPF, ENDEREÇO. E por fim organizar a entrega,enviamos via transportadora..
 
-Atendimento 100% personalizado
+- Tem loja física?
+Sim,  A Guidon Rodas tem loja física localizada no RJ (Jacarépagua) , mas toda negociação é realizada exclusivamente pela plataforma.
 
-Produto de excelente qualidade e acabamento
+===============================================================TRABALHAMOS COM OS PRINCIPAIS MODELOS DO MERCADO – POPULARES, CLÁSSICOS E ESPORTIVOS
 
-Tire suas dúvidas no campo "perguntas"
+GM / Chevrolet:
+Onix, Onix Plus, Astra, Corsa, Celta, S10, Montana, Meriva, Zafira, Prisma, Vectra, Spin, Cruze, Tracker, Blazer, Omega, Kadett, Monza, Agile, Classic, Camaro, Opala, Caravan, Chevette, C10, D10, Veraneio, Calibra, Vectra GTX, Astra GSi
 
-Envio: PRONTA ENTREGA; postamos seu produto em até 24 horas com confirmação do pagamento
+Volkswagen (VW):
+Gol G1 a G7, Voyage, Saveiro (Surf, Cross, Robust), Golf, Polo, Virtus, Fox, Jetta, Passat, Amarok, T-Cross, Taos, Tiguan, Santana, Parati, Brasília, Fusca, SP2, Karmann Ghia, TL, Variant
 
-Compra 100% Segura
+Fiat:
+Uno, Palio, Siena, Strada, Toro, Argo, Mobi, Punto, Idea, Linea, Tipo, Tempra, Doblo, Weekend, Fastback, Pulse, Bravo, Cronos, 147, Elba, Oggi, Premio, Marea
 
-Produtos bem embalados e protegidos.
+Ford:
+Ka, Ka+, Fiesta, EcoSport, Fusion, Focus, Courier, Ranger, Edge, Maverick, Territory, Escort, Verona, Del Rey, Corcel, F100, F1000, XR3, Galaxie, Landau
 
-=================================================================================================
+Honda:
+Civic, Fit, City, HR-V, WR-V, CR-V, Accord, New City Hatch
 
-SOMOS MERCADO LÍDER
+Toyota:
+Corolla, Corolla Cross, Hilux, SW4, Etios, Etios Cross, Yaris, Yaris Sedan, RAV4, Camry, Bandeirante
 
-ESPECIALISTA EM RODAS - EMPRESA DE GRUPO GUIDON - A MAIS DE 40 ANOS NO MERCADO.
+Hyundai:
+HB20, HB20S, HB20X, Creta, Tucson, Santa Fe, i30, ix35, Azera, Sonata, Elantra, Veloster
 
-MAIOR ACERVO DE RODAS DA AMERICA LATINA.
+Renault:
+Sandero, Logan, Kwid, Duster, Oroch, Stepway, Captur, Megane, Fluence
 
-MAIS DE 10.000 RODAS EM ESTOQUE.
+Peugeot:
+106, 206, 207, 208, 306, 307, 308, 408, 2008, 3008, 5008, Expert, Partner
 
-VENDEMOS JOGOS COMPLETOS OU RODAS AVULSAS
+Citroën:
+C3, C3 Aircross, C4 Pallas, C4 Lounge, C4 Picasso, C5, Xsara, Berlingo
 
-ACEITAMOS ENCOMENDAS - ARRUMAMOS QUALQUER TIPO DE RODA.
+Nissan:
+March, Versa, Kicks, Sentra, Livina, Tiida, Frontier, X-Trail
 
-Clique no botão "Comprar agora" para garantir o melhor preço!
+ Jeep:
+Renegade, Compass, Commander, Grand Cherokee, Wrangler
 
-Garantia do vendedor: 90 dias
+ Mitsubishi:
+Lancer, ASX, Outlander, Pajero TR4, Pajero Full, Eclipse
+
+ Kia Motors:
+Cerato, Sportage, Soul, Picanto, Sorento, Bongo
+
+ Modelos Esportivos, Clássicos e de Colecionador:
+Camaro, Opala, Caravan, Chevette, Escort XR3, Puma GTB, Puma VW, Adamo, Dardo, Bug, Bianco, Malzone, GOL GT, Kadett, SP2, Maverick, Fusca Baja, Corcel II, F100, F1000, Dodge Charger R/T, Dart, Le Baron, Landau, Galaxie, Willys
+
+ Marcas e Rodas Esportivas (aftermarket e tuning):
+Volcano, Krmai, Scorro, Tsuya, Mangels, Rial, MRW, Zunky, Presenza, OXX, Red Dragon, SSW, TSW, Vaska, Hitech, Ride, Rays, Enkei, Fifteen52, Status Wheels, BBS, Jolly Limbra, Titanio, Ital, Noova, Ferraro, BAR, Monaco, Ramlow, Cragar
+
+===============================================================
+
+DIFERENCIAIS DA GUIDON
+
+ Reputação de excelência com milhares de avaliações positivas
+ Roda recondicionada com acabamento impecável
+ Equipamentos modernos e técnicos especializados
+ Atendimento personalizado antes e depois da venda
+ Processo seguro de compra e entrega
+ Embalagem reforçada para garantir integridade total no transporte ENTREGA RÁPIDA E SEGURA
+
+Trabalhamos com estoque real e pronta entrega. Após a confirmação do pagamento, postamos em até 24 horas úteis.
+
+ATENÇÃO:
+ O Mercado Envios permite o envio de 1 unidade por vez. Para comprar 2 ou mais rodas, solicite cotação no campo de perguntas.
+
+ MAIOR ESTOQUE DE RODAS DA AMÉRICA LATINA
+ Mais de 10.000 items em estoque com variedade para carros nacionais e importados.
+ Vendemos jogos completos ou rodas avulsas.
+ Aceitamos encomendas sob medida. Se existe, a gente encontra!
