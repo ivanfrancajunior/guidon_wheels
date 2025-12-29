@@ -5,13 +5,20 @@ from src.guidon.core.models import Calota, ProdutoBase, Roda
 
 
 class ImageManager:
-    def __init__(self, assets_dir: Path):
+    def __init__(self, assets_dir: Path = None):
         """
-        :param assets_dir: Pasta onde fica a imagem 'valor_ref_und.jpg'
+        :param assets_dir: Caminho completo para a imagem 'valor_ref_und.jpg'
         """
-        self.assets_dir = assets_dir
-        # O arquivo único que será usado
-        self.default_image = self.assets_dir / "valor_ref_und.jpg"
+        if assets_dir is None:
+            self.default_image = Path(
+                r"C:\Users\Junior\Desktop\guidon_wheels\assets\valor_ref_und.jpg"
+            )
+        else:
+            self.default_image = Path(assets_dir)
+
+        # Verifica se o arquivo existe
+        if not self.default_image.exists():
+            print(f"⚠️  ALERTA: Imagem padrão não encontrada em: {self.default_image}")
 
     def process_images(self, product: ProdutoBase, product_folder: Path):
         """
