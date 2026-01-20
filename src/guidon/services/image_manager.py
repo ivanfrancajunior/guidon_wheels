@@ -7,16 +7,18 @@ from src.guidon.core.models import Calota, ProdutoBase, Roda
 class ImageManager:
     def __init__(self, assets_dir: Path = None):
         """
-        :param assets_dir: Caminho completo para a imagem 'valor_ref_und.jpg'
+        :param assets_dir: Caminho completo para a pasta de assets.
+                           Se não fornecido, tenta resolver dinamicamente.
         """
-        if assets_dir is None:
-            self.default_image = Path(
-                r"C:\Users\Junior\Desktop\guidon_wheels\assets\valor_ref_und.jpg"
-            )
+        if assets_dir:
+            self.assets_dir = assets_dir
         else:
-            self.default_image = Path(assets_dir)
+            current_dir = Path(__file__).parent
+            project_root = current_dir.parent.parent.parent
+            self.assets_dir = project_root / "assets"
 
-        # Verifica se o arquivo existe
+        self.default_image = self.assets_dir / "valor_ref_und.jpg"
+
         if not self.default_image.exists():
             print(f"⚠️  ALERTA: Imagem padrão não encontrada em: {self.default_image}")
 
@@ -26,9 +28,6 @@ class ImageManager:
         """
         should_copy = False
 
-        # Regra Simplificada:
-        # 1. É Calota? SIM.
-        # 2. É Roda e o material é Ferro? SIM.
         if isinstance(product, Calota):
             should_copy = True
         elif (
@@ -37,11 +36,9 @@ class ImageManager:
         ):
             should_copy = True
 
-        # Executa a cópia se necessário
         if should_copy:
             if self.default_image.exists():
                 try:
-                    # Copia o arquivo para dentro da pasta do produto mantendo o nome
                     dest_file = product_folder / self.default_image.name
                     shutil.copy2(self.default_image, dest_file)
                     print(f"   [🖼️] Imagem copiada: {self.default_image.name}")
