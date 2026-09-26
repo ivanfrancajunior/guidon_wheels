@@ -11,10 +11,6 @@ class ContentBuilder:
     Handles the generation of content (descriptions and group texts) for products based on templates.
     """
     def __init__(self, templates_dir: Path = None):
-        """
-        Initializes the builder, resolving the templates directory relative to the project root
-        if not provided.
-        """
         if templates_dir:
             self.templates_dir = templates_dir
         else:
@@ -23,85 +19,61 @@ class ContentBuilder:
             self.templates_dir = project_root / "templates"
 
         if not self.templates_dir.exists():
-            print(
-                f"⚠️  ALERTA: Pasta de templates não encontrada em: {self.templates_dir}"
-            )
+            print(f"⚠️  ALERTA: Pasta de templates não encontrada em: {self.templates_dir}")
 
     def _load_template(self, filename: str) -> str:
-        """Loads a template file content from the templates directory."""
         path = self.templates_dir / filename
         if not path.exists():
             raise FileNotFoundError(f"Template não encontrado: {filename}")
         return path.read_text(encoding="utf-8")
 
     def _format_money(self, value: float) -> str:
-        """Formats a float as Brazilian currency string (e.g. 1.234,56)."""
         return f"{value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
-    def _extract_measures_from_name(self, texto: str) -> Dict[str, str]:
-        """
-        Extracts rim (aro), width (tala) and hole pattern (furacao) from a product name string.
-        Returns a dictionary with default '?' values if not found.
-        """
+    def _extract_measures(self, texto: str) -> Dict[str, str]:
         extra = {"aro": "?", "tala": "?", "furacao": "?"}
+        if not texto:
+            return extra
 
-        texto_upper = texto.upper()
-
-        for furacao in FURACOES_CONHECIDAS:
-            if furacao.upper() in texto_upper:
-                extra["furacao"] = furacao.replace(",", ".")
-                break
-
-        match_triplo = re.search(r"(\d{2})[xX](\d+[.,]?\d?)[xX](\d+[.,]?\d?)", texto)
-
-        if match_triplo:
-            extra["aro"] = match_triplo.group(1)
-            t1 = match_triplo.group(2).replace(".", ",")
-            t2 = match_triplo.group(3).replace(".", ",")
-            extra["tala"] = f"{t1} e {t2}"
+        # 1. Regex Furação (ex: 5X100, 4X108, 5X114,3, 5x114.3)
+        match_furacao = re.search(r"(\d)\s*[xX]\s*(\d{2,3}(?:[.,]\d)?)", texto)
+        if match_furacao:
+            qtd_furos = match_furacao.group(1)
+            distancia = match_furacao.group(2).replace(",", ".")
+            extra["furacao"] = f"{qtd_furos}x{distancia}"
         else:
-            matches = re.findall(r"(\d{2})[xX](\d{1,2}(?:[.,]\d)?)", texto)
-            if matches:
-                aros = sorted(list(set(m[0] for m in matches)))
-                talas = [m[1].replace(".", ",") for m in matches]
-                extra["aro"] = " e ".join(aros)
-                extra["tala"] = " e ".join(talas)
+            texto_upper = texto.upper()
+            for furacao in FURACOES_CONHECIDAS:
+                if furacao.upper() in texto_upper:
+                    extra["furacao"] = furacao.replace(",", ".")
+                    break
+
+        # 2. Regex Aro e Tala (ex: 16X6,5)
+        match_medidas = re.search(r"(\d{2})\s*[xX]\s*(\d+(?:[.,]\d)?)", texto)
+        if match_medidas:
+            extra["aro"] = match_medidas.group(1)
+            extra["tala"] = match_medidas.group(2).replace(".", ",")
 
         return extra
 
     def _prepare_context(self, product: ProdutoBase) -> Dict[str, Any]:
-        """
-        Prepares the context dictionary for template interpolation.
-        Includes fields from the model plus formatted prices and extracted extra measures for wheels.
-        """
         ctx = product.model_dump(exclude_none=True)
 
         ctx["preco_avista"] = self._format_money(product.preco_avista)
         ctx["preco_ml"] = self._format_money(product.preco_ml)
 
         if isinstance(product, Roda):
-            medidas = self._extract_measures_from_name(product.modelo)
+            # Lê do bruto_modelo para recuperar furação e medidas limpas pelo Pydantic
+            texto_completo = getattr(product, "bruto_modelo", product.modelo)
+            medidas = self._extract_measures(texto_completo)
 
-            if (
-                product.aro == ""
-                or product.aro == "0"
-                or " e " in medidas["aro"]
-                or " e " in medidas["tala"]
-                or medidas["furacao"] != "?"
-            ):
-                ctx.update(medidas)
-            else:
-                if "aro" not in ctx:
-                    ctx["aro"] = medidas["aro"]
-                if "tala" not in ctx:
-                    ctx["tala"] = medidas["tala"]
-                if "furacao" not in ctx:
-                    ctx["furacao"] = medidas["furacao"]
+            ctx["aro"] = product.aro if (product.aro and product.aro != "?") else medidas["aro"]
+            ctx["tala"] = product.tala if (product.tala and product.tala != "?") else medidas["tala"]
+            ctx["furacao"] = medidas["furacao"]
+            ctx["et"] = product.offset if product.offset else "?"
 
         ctx["cor"] = ctx.get("acabamento", "")
         ctx["numero_peça"] = ctx.get("sku", "")
-        ctx["et"] = ctx.get("offset", "")
-
         ctx["Modelo"] = product.modelo
         ctx["Material"] = product.material
         if "diametro" in ctx:
@@ -110,16 +82,10 @@ class ContentBuilder:
         return {k: str(v) for k, v in ctx.items()}
 
     def create_content(self, product: ProdutoBase, product_folder: Path):
-        """
-        Main method to generate 'descricao.txt' and 'grupo.txt' for a given product
-        inside its target folder, using the appropriate template.
-        """
         if isinstance(product, Calota):
             templates = ("descricao_calota.txt", "descricao_grupo_calotas.txt")
-
         elif isinstance(product, Roda):
             templates = ("descricao_roda_ferro.txt", "descricao_grupo_rodas.txt")
-
         else:
             return
 
