@@ -1,5 +1,6 @@
 import re
 from typing import Union
+import pandas as pd
 from pydantic import BaseModel, Field, computed_field, field_validator
 
 
@@ -7,7 +8,7 @@ class ProdutoBase(BaseModel):
     data: str = Field(default="", alias="dt")
     fabricante: str = Field(..., alias="fabricante")
     modelo: str = Field(..., alias="modelo")
-    bruto_modelo: str = Field(default="")  # Guarda o texto completo sem cortes
+    bruto_modelo: str = Field(default="")
 
     sku: str = Field(default="-", alias="sku")
 
@@ -19,20 +20,28 @@ class ProdutoBase(BaseModel):
     preco_ml: float = Field(default=0.0, alias="ml")
     concorrencia: str = Field(default="", alias="concorrência")
 
+    @field_validator("sku", "data", mode="before")
+    def parse_string_fields(cls, value):
+        if value is None or pd.isna(value):
+            return "-"
+        if isinstance(value, float):
+            return str(int(value)) if value.is_integer() else str(value)
+        return str(value).strip()
+
+    @field_validator("concorrencia", "acabamento", "material", mode="before")
+    def handle_nan_strings(cls, value):
+        if value is None or pd.isna(value):
+            return ""
+        return str(value).strip().title() if isinstance(value, str) else str(value)
+
     @field_validator("qtd", mode="before")
     def parse_qtd(cls, v):
-        if v is None or str(v).strip() == "":
+        if v is None or pd.isna(v) or str(v).strip() == "":
             return 0
         try:
             return int(float(v))
         except ValueError:
             return 0
-
-    @field_validator("fabricante", "acabamento", "material", mode="before")
-    def validate_columns_names(cls, value):
-        if isinstance(value, str):
-            return value.strip().title()
-        return value
 
     @field_validator("fabricante")
     def convert_lablel_names(cls, value):
@@ -48,7 +57,7 @@ class ProdutoBase(BaseModel):
 
     @field_validator("preco_avista", "preco_ml", mode="before")
     def price_handler(cls, value):
-        if value is None or str(value).strip() == "":
+        if value is None or pd.isna(value) or str(value).strip() == "":
             return 0.0
         if isinstance(value, (float, int)):
             return float(value)
@@ -80,14 +89,16 @@ class Roda(ProdutoBase):
 
     @field_validator("offset", "aro", "tala", mode="before")
     def parse_roda_fields(cls, v):
-        if v is None:
+        if v is None or pd.isna(v):
             return ""
+        if isinstance(v, float):
+            return str(int(v)) if v.is_integer() else str(v)
         return str(v).strip()
 
     @field_validator("modelo", mode="before")
-    def extract_model_name(cls, v, info):
+    def extract_model_name(cls, v):
         if not isinstance(v, str):
-            return v
+            return str(v) if v is not None else ""
 
         match = re.search(r"Roda\s+Guidon\s+(.+?)\s+(?=\d{2}[xX])", v, re.IGNORECASE)
         if match:
@@ -96,7 +107,6 @@ class Roda(ProdutoBase):
         return v
 
     def __init__(self, **data):
-        # Captura o texto do modelo antes do corte do Pydantic
         if "bruto_modelo" not in data and "modelo" in data:
             data["bruto_modelo"] = str(data["modelo"])
         super().__init__(**data)
@@ -107,7 +117,11 @@ class Calota(ProdutoBase):
 
     @field_validator("diametro", mode="before")
     def handle_size(cls, v):
-        return str(v).strip().upper() if v else ""
+        if v is None or pd.isna(v):
+            return ""
+        if isinstance(v, float):
+            return str(int(v)) if v.is_integer() else str(v)
+        return str(v).strip().upper()
 
 
 class Calotao(ProdutoBase):
@@ -115,6 +129,8 @@ class Calotao(ProdutoBase):
 
     @field_validator("diametro", mode="before")
     def handle_size(cls, value):
-        if value == "" or value is None:
+        if value == "" or value is None or pd.isna(value):
             return "X"
+        if isinstance(value, float):
+            return str(int(value)) if value.is_integer() else str(value)
         return str(value).strip().upper()
